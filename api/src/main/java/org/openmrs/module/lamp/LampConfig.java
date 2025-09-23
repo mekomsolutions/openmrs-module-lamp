@@ -7,15 +7,15 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.childnutrition;
+package org.openmrs.module.lamp;
 
 import org.springframework.stereotype.Component;
 
 /**
  * Contains module's config.
  */
-@Component("childnutrition.ChildnutritionConfig")
-public class ChildnutritionConfig {
+@Component("lamp.LampConfig")
+public class LampConfig {
 	
 	// EncounterType used by the Child Nutrition form
 	public static final String CHILD_NUTRITION_ENCOUNTER_TYPE_UUID = "a46c50d1-f8f2-4b73-9940-7e77c64bcffc";

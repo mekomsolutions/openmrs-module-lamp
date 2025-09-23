@@ -3,7 +3,7 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.openmrs.module.childnutrition;
+package org.openmrs.module.lamp;
 
 import java.util.Date;
 
@@ -22,16 +22,16 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.handler.SaveHandler;
 
 /**
- * Handles encounter saves for the Child Nutrition form: enrolls patients into the program when
- * needed, and syncs malnutrition status to the program workflow.
+ * Handles encounter saves for the Lamp form: enrolls patients into the program when needed, and
+ * syncs malnutrition status to the program workflow.
  */
 @Handler(supports = Encounter.class)
-public class ChildNutritionEncounterSaveHandler implements SaveHandler<Encounter> {
+public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 	
 	@Override
 	public void handle(Encounter encounter, User currentUser, Date currentDate, String reason) {
 		ProgramWorkflowService programWorkflowService = Context.getProgramWorkflowService();
-		Program program = programWorkflowService.getProgramByUuid(ChildnutritionConfig.PROGRAM_CHILD_NUTRITION_UUID);
+		Program program = programWorkflowService.getProgramByUuid(LampConfig.PROGRAM_CHILD_NUTRITION_UUID);
 		if (program == null) {
 			return;
 		}
@@ -43,13 +43,13 @@ public class ChildNutritionEncounterSaveHandler implements SaveHandler<Encounter
 		PatientProgram patientProgram = getOrCreateActiveProgramEnrollment(programWorkflowService, encounter.getPatient(),
 		    program, encounter.getEncounterDatetime());
 		Concept malnutritionStatusConcept = Context.getConceptService().getConceptByUuid(
-		    ChildnutritionConfig.CONCEPT_CHILD_NUTRITION_MALNUTRITION_STATUS_UUID);
+		    LampConfig.CONCEPT_CHILD_NUTRITION_MALNUTRITION_STATUS_UUID);
 		if (malnutritionStatusConcept == null) {
 			return;
 		}
 		
 		Concept reasonForDischargeConcept = Context.getConceptService().getConceptByUuid(
-		    ChildnutritionConfig.CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID);
+		    LampConfig.CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID);
 		if (reasonForDischargeConcept == null) {
 			return;
 		}
@@ -62,7 +62,7 @@ public class ChildNutritionEncounterSaveHandler implements SaveHandler<Encounter
 		
 		Concept statusValue = reasonForDischargeValue == null ? malnutritionStatusValue : reasonForDischargeValue;
 		
-		ProgramWorkflow programWorkflow = getWorkflowByUuid(program, ChildnutritionConfig.WORKFLOW_CHILD_NUTRITION_UUID);
+		ProgramWorkflow programWorkflow = getWorkflowByUuid(program, LampConfig.WORKFLOW_CHILD_NUTRITION_UUID);
 		if (programWorkflow == null) {
 			return;
 		}
@@ -94,7 +94,7 @@ public class ChildNutritionEncounterSaveHandler implements SaveHandler<Encounter
 	
 	private boolean isChildNutritionEncounter(Encounter encounter) {
 		return encounter != null && encounter.getEncounterType() != null
-		        && ChildnutritionConfig.CHILD_NUTRITION_ENCOUNTER_TYPE_UUID.equals(encounter.getEncounterType().getUuid());
+		        && LampConfig.CHILD_NUTRITION_ENCOUNTER_TYPE_UUID.equals(encounter.getEncounterType().getUuid());
 	}
 	
 	private PatientProgram getOrCreateActiveProgramEnrollment(ProgramWorkflowService programWorkflowService,

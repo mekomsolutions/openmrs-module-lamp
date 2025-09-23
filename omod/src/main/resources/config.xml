@@ -6,11 +6,11 @@
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
-	<package>org.openmrs.module.childnutrition</package>
+	<package>org.openmrs.module.lamp</package>
 	<author>mekomsolutions</author>
 	<description>${project.parent.description}</description>
     <require_version>${openmrsPlatformVersion}</require_version>
 
-	<activator>org.openmrs.module.childnutrition.ChildnutritionActivator</activator>
+	<activator>org.openmrs.module.lamp.LampActivator</activator>
 </module>
 

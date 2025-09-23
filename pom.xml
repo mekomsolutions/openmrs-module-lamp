@@ -9,18 +9,16 @@
     </parent>
 
 	<groupId>org.openmrs.module</groupId>
-	<artifactId>childnutrition</artifactId>
+	<artifactId>lamp</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Child nutrition</name>
-	<description>no description</description>
-
-	<url>https://wiki.openmrs.org/x/FQ4z</url>
+	<name>Lamp</name>
+	<description>An all-use OpenMRS module specific to Lamp for Haiti, mostly used for now to manage Child Nutrition and Prenatal programs.</description>
 
 	<scm>
-		<connection>scm:git:git@github.com:openmrs/openmrs-module-childnutrition.git</connection>
-		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-childnutrition.git</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-childnutrition/</url>
+		<connection>scm:git:git@github.com:openmrs/openmrs-module-lamp.git</connection>
+		<developerConnection>scm:git:git@github.com:openmrs/openmrs-module-lamp.git</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-lamp/</url>
 	</scm>
 
 	<modules>
