@@ -20,7 +20,7 @@ public class LampConfig {
 	// EncounterType used by the Child Nutrition form
 	public static final String CHILD_NUTRITION_ENCOUNTER_TYPE_UUID = "a46c50d1-f8f2-4b73-9940-7e77c64bcffc";
 	
-	public static final String CONCEPT_CHILD_NUTRITION_PROGRAM_STATUS_UUID = "9c01f218-1f2e-4f1a-9c5e-b9a92f123456";
+	public static final String CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID = "0a947c3b-ac0a-42af-9299-674620dc7a6d";
 	
 	public static final String CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID = "a7781567-2c1e-4bfd-ad3a-182915722916";
 	

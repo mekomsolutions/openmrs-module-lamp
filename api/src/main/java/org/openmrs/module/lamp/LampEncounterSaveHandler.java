@@ -27,7 +27,7 @@ import org.openmrs.api.handler.SaveHandler;
  */
 @Handler(supports = Encounter.class)
 public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
-	
+
 	@Override
 	public void handle(Encounter encounter, User currentUser, Date currentDate, String reason) {
 		ProgramWorkflowService programWorkflowService = Context.getProgramWorkflowService();
@@ -35,11 +35,11 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		if (program == null) {
 			return;
 		}
-		
+
 		if (!isChildNutritionEncounter(encounter)) {
 			return;
 		}
-		
+
 		PatientProgram patientProgram = getOrCreateActiveProgramEnrollment(programWorkflowService, encounter.getPatient(),
 		    program, encounter.getEncounterDatetime());
 		Concept malnutritionStatusConcept = Context.getConceptService().getConceptByUuid(
@@ -47,31 +47,47 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		if (malnutritionStatusConcept == null) {
 			return;
 		}
-		
+
 		Concept reasonForDischargeConcept = Context.getConceptService().getConceptByUuid(
 		    LampConfig.CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID);
 		if (reasonForDischargeConcept == null) {
 			return;
 		}
-		
+
 		Concept malnutritionStatusValue = findLatestCodedObsValue(encounter, malnutritionStatusConcept);
 		Concept reasonForDischargeValue = findLatestCodedObsValue(encounter, reasonForDischargeConcept);
 		if (malnutritionStatusValue == null && reasonForDischargeValue == null) {
 			return;
 		}
-		
-		Concept statusValue = reasonForDischargeValue == null ? malnutritionStatusValue : reasonForDischargeValue;
-		
+
 		ProgramWorkflow programWorkflow = getWorkflowByUuid(program, LampConfig.WORKFLOW_CHILD_NUTRITION_UUID);
 		if (programWorkflow == null) {
 			return;
 		}
-		
-		ProgramWorkflowState targetState = getStateByConcept(programWorkflow, statusValue);
-		if (targetState == null) {
-			return;
+
+		ProgramWorkflowState targetState = null;
+		boolean isReachedTargetGoalWeightStateFromMalnutritionStatusValue = false;
+
+		if (malnutritionStatusValue != null) {
+			targetState = getStateByConcept(programWorkflow, malnutritionStatusValue);
+			if (targetState == null) {
+				return;
+			}
+			if (targetState.getConcept().getUuid().equalsIgnoreCase(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID)) {
+				isReachedTargetGoalWeightStateFromMalnutritionStatusValue = true;
+			}
 		}
-		
+
+		if (reasonForDischargeValue != null) {
+			targetState = getStateByConcept(programWorkflow, reasonForDischargeValue);
+			if (targetState == null) {
+				return;
+			}
+			if (targetState.getConcept().getUuid().equalsIgnoreCase(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID)) {
+				isReachedTargetGoalWeightStateFromMalnutritionStatusValue = false;
+			}
+		}
+
 		Date programStatusUpdateDate;
 		Date enrolled = patientProgram.getDateEnrolled();
 		if (enrolled != null && encounter.getEncounterDatetime() != null
@@ -82,21 +98,22 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		} else {
 			programStatusUpdateDate = currentDate;
 		}
-		
+
 		patientProgram.transitionToState(targetState, programStatusUpdateDate);
-		
-		if (targetState.getTerminal()) {
+
+		if (targetState.getTerminal() && !isReachedTargetGoalWeightStateFromMalnutritionStatusValue) {
 			patientProgram.setDateCompleted(programStatusUpdateDate);
 		}
+
 		patientProgram.setLocation(encounter.getLocation());
 		programWorkflowService.savePatientProgram(patientProgram);
 	}
-	
+
 	private boolean isChildNutritionEncounter(Encounter encounter) {
 		return encounter != null && encounter.getEncounterType() != null
 		        && LampConfig.CHILD_NUTRITION_ENCOUNTER_TYPE_UUID.equals(encounter.getEncounterType().getUuid());
 	}
-	
+
 	private PatientProgram getOrCreateActiveProgramEnrollment(ProgramWorkflowService programWorkflowService,
 	        Patient patient, Program program, Date enrolledOn) {
 		PatientProgram activePatientProgram = getActiveProgramEnrollment(programWorkflowService, patient, program);
@@ -109,7 +126,7 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		patientProgram.setDateEnrolled(enrolledOn);
 		return programWorkflowService.savePatientProgram(patientProgram);
 	}
-	
+
 	private PatientProgram getActiveProgramEnrollment(ProgramWorkflowService programWorkflowService, Patient patient,
 	        Program program) {
 		for (PatientProgram patientProgram : programWorkflowService.getPatientPrograms(patient, program, null, null, null,
@@ -120,7 +137,7 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		}
 		return null;
 	}
-	
+
 	private Concept findLatestCodedObsValue(Encounter encounter, Concept questionConcept) {
 		Concept result = null;
 		Date latest = null;
@@ -135,7 +152,7 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		}
 		return result;
 	}
-	
+
 	private ProgramWorkflow getWorkflowByUuid(Program program, String workflowUuid) {
 		for (ProgramWorkflow programWorkflow : program.getWorkflows()) {
 			if (programWorkflow != null && workflowUuid.equals(programWorkflow.getUuid())) {
@@ -144,7 +161,7 @@ public class LampEncounterSaveHandler implements SaveHandler<Encounter> {
 		}
 		return null;
 	}
-	
+
 	private ProgramWorkflowState getStateByConcept(ProgramWorkflow programWorkflow, Concept concept) {
 		for (ProgramWorkflowState programWorkflowState : programWorkflow.getStates()) {
 			if (concept.equals(programWorkflowState.getConcept())) {
