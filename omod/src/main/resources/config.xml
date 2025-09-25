@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.2">
+	
+	<!-- Base Module Properties -->
+	<id>${project.parent.artifactId}</id>
+	<name>${project.parent.name}</name>
+	<version>${project.parent.version}</version>
+	<package>org.openmrs.module.lamp</package>
+	<author>mekomsolutions</author>
+	<description>${project.parent.description}</description>
+    <require_version>${openmrsPlatformVersion}</require_version>
+
+	<activator>org.openmrs.module.lamp.LampActivator</activator>
+</module>
+
