@@ -11,13 +11,9 @@ package org.openmrs.module.lamp;
 
 import org.springframework.stereotype.Component;
 
-/**
- * Contains module's config.
- */
 @Component("lamp.LampConfig")
 public class LampConfig {
 	
-	// EncounterType used by the Child Nutrition form
 	public static final String CHILD_NUTRITION_ENCOUNTER_TYPE_UUID = "a46c50d1-f8f2-4b73-9940-7e77c64bcffc";
 	
 	public static final String CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID = "0a947c3b-ac0a-42af-9299-674620dc7a6d";
@@ -29,4 +25,12 @@ public class LampConfig {
 	public static final String PROGRAM_CHILD_NUTRITION_UUID = "828ce80d-1de0-4798-a9a9-0e89f37d0aaa";
 	
 	public static final String WORKFLOW_CHILD_NUTRITION_UUID = "ffe59a80-e9fa-4403-aa00-999ee812f602";
+	
+	public static final String PRENATAL_ENCOUNTER_TYPE_UUID = "919115d3-206c-456e-a74d-00c0669a83eb";
+	
+	public static final String CONCEPT_PRENATAL_PREGNANCY_STATUS_UUID = "a203471c-47bc-4706-a288-6f74ecec6932";
+	
+	public static final String PROGRAM_PRENATAL_UUID = "3531501f-bbdf-4e49-be19-6c87220f71ee";
+	
+	public static final String WORKFLOW_PRENATAL_UUID = "3009b582-1745-46bc-8886-7ea20f4675f2";
 }
