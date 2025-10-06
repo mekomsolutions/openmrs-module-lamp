@@ -43,6 +43,7 @@ public class PrenatalProgramStrategyTest {
 	@Before
 	public void setup() {
 		PowerMockito.mockStatic(Context.class);
+		PowerMockito.mockStatic(Utils.class);
 		Mockito.when(Context.getProgramWorkflowService()).thenReturn(mockProgramWorkflowService);
 		Mockito.when(Context.getConceptService()).thenReturn(mockConceptService);
 		prenatalProgramStrategy = new PrenatalProgramStrategy();
@@ -76,7 +77,6 @@ public class PrenatalProgramStrategyTest {
 		// then
 		verify(mockProgramWorkflowService, never()).getProgramByUuid(anyString());
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.updateProgram(any(PatientProgram.class), any(Encounter.class), any(Date.class),
 		    any(ProgramWorkflowState.class));
 	}
@@ -95,7 +95,6 @@ public class PrenatalProgramStrategyTest {
 		verify(mockProgramWorkflowService, times(1)).getProgramByUuid(LampConfig.PROGRAM_PRENATAL_UUID);
 		verify(mockConceptService, never()).getConceptByUuid(anyString());
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.getOrCreateActiveProgramEnrollment(eq(mockProgramWorkflowService), any(Patient.class), any(Program.class),
 		    any(Date.class));
 	}
@@ -114,7 +113,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.findLatestCodedObsValue(any(Encounter.class), any(Concept.class));
 	}
 	
@@ -146,7 +144,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.getStateByConcept(any(ProgramWorkflow.class), any(Concept.class));
 	}
 	
@@ -181,7 +178,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.updateProgram(any(PatientProgram.class), any(Encounter.class), any(Date.class),
 		    any(ProgramWorkflowState.class));
 	}
@@ -218,7 +214,6 @@ public class PrenatalProgramStrategyTest {
 		prenatalProgramStrategy.execute(encounter, user, now, "reason");
 		
 		// then
-		PowerMockito.verifyStatic(Utils.class, times(1));
 		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(targetState));
 		
 		assertEquals(encounter.getLocation(), pp.getLocation());

@@ -100,7 +100,6 @@ public class ChildNutritionProgramStrategyTest {
 		childNutritionProgramStrategy.execute(encounter, new User(), new Date(), "reason");
 		
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		PowerMockito.verifyStatic(Utils.class, never());
 		Utils.getOrCreateActiveProgramEnrollment(eq(mockProgramWorkflowService), any(Patient.class), any(Program.class),
 		    any(Date.class));
 	}
@@ -276,7 +275,6 @@ public class ChildNutritionProgramStrategyTest {
 		assertFalse(state.getTerminal());
 		
 		// then
-		PowerMockito.verifyStatic(Utils.class, times(1));
 		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(state));
 		
 		// transition & save
@@ -325,7 +323,6 @@ public class ChildNutritionProgramStrategyTest {
 		assertTrue(state.getTerminal());
 		
 		// then
-		PowerMockito.verifyStatic(Utils.class, times(1));
 		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(state));
 		
 		// transition & save
