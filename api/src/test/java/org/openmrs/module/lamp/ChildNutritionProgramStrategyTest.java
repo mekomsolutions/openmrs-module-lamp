@@ -100,8 +100,6 @@ public class ChildNutritionProgramStrategyTest {
 		childNutritionProgramStrategy.execute(encounter, new User(), new Date(), "reason");
 		
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.getOrCreateActiveProgramEnrollment(eq(mockProgramWorkflowService), any(Patient.class), any(Program.class),
-		    any(Date.class));
 	}
 	
 	@Test
@@ -274,9 +272,6 @@ public class ChildNutritionProgramStrategyTest {
 		assertNull(pp.getDateCompleted());
 		assertFalse(state.getTerminal());
 		
-		// then
-		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(state));
-		
 		// transition & save
 		assertEquals(encounter.getLocation(), pp.getLocation());
 		verify(mockProgramWorkflowService, times(1)).savePatientProgram(pp);
@@ -321,9 +316,6 @@ public class ChildNutritionProgramStrategyTest {
 		// dateCompleted should NOT be set because it came from malnutrition path
 		assertNull(pp.getDateCompleted());
 		assertTrue(state.getTerminal());
-		
-		// then
-		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(state));
 		
 		// transition & save
 		assertEquals(encounter.getLocation(), pp.getLocation());

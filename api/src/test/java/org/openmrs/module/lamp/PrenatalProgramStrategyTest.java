@@ -77,8 +77,6 @@ public class PrenatalProgramStrategyTest {
 		// then
 		verify(mockProgramWorkflowService, never()).getProgramByUuid(anyString());
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.updateProgram(any(PatientProgram.class), any(Encounter.class), any(Date.class),
-		    any(ProgramWorkflowState.class));
 	}
 	
 	@Test
@@ -95,8 +93,6 @@ public class PrenatalProgramStrategyTest {
 		verify(mockProgramWorkflowService, times(1)).getProgramByUuid(LampConfig.PROGRAM_PRENATAL_UUID);
 		verify(mockConceptService, never()).getConceptByUuid(anyString());
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.getOrCreateActiveProgramEnrollment(eq(mockProgramWorkflowService), any(Patient.class), any(Program.class),
-		    any(Date.class));
 	}
 	
 	@Test
@@ -113,7 +109,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.findLatestCodedObsValue(any(Encounter.class), any(Concept.class));
 	}
 	
 	@Test
@@ -144,7 +139,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.getStateByConcept(any(ProgramWorkflow.class), any(Concept.class));
 	}
 	
 	@Test
@@ -178,8 +172,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// then
 		verify(mockProgramWorkflowService, never()).savePatientProgram(any(PatientProgram.class));
-		Utils.updateProgram(any(PatientProgram.class), any(Encounter.class), any(Date.class),
-		    any(ProgramWorkflowState.class));
 	}
 	
 	@Test
@@ -212,9 +204,6 @@ public class PrenatalProgramStrategyTest {
 		
 		// when
 		prenatalProgramStrategy.execute(encounter, user, now, "reason");
-		
-		// then
-		Utils.updateProgram(eq(pp), eq(encounter), eq(now), eq(targetState));
 		
 		assertEquals(encounter.getLocation(), pp.getLocation());
 		verify(mockProgramWorkflowService, times(1)).savePatientProgram(pp);
