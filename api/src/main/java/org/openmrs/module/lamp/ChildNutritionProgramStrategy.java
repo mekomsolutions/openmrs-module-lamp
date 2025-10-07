@@ -71,13 +71,11 @@ public class ChildNutritionProgramStrategy implements ProgramStrategy {
 			}
 		}
 		
-		Date programStatusUpdateDate = Utils.getProgramStatusUpdateDate(patientProgram, encounter, currentDate);
-		
-		if (targetState.getTerminal() && !isReachedTargetGoalWeightStateFromMalnutritionStatusValue) {
-			patientProgram.setDateCompleted(new Date());
+		if (isReachedTargetGoalWeightStateFromMalnutritionStatusValue) {
+			targetState.setTerminal(false);
 		}
 		
-		patientProgram.transitionToState(targetState, programStatusUpdateDate);
+		Utils.updateProgram(patientProgram, encounter, currentDate, targetState);
 		patientProgram.setLocation(encounter.getLocation());
 		programWorkflowService.savePatientProgram(patientProgram);
 	}
