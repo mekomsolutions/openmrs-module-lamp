@@ -31,10 +31,13 @@ public class PrenatalProgramStrategy implements ProgramStrategy {
 			return;
 		}
 		
-		Concept prenatalStatusValue = Utils.findLatestCodedObsValue(encounter, pregnancyStatusConcept);
-		
 		ProgramWorkflow programWorkflow = Utils.getWorkflowByUuid(program, LampConfig.WORKFLOW_PRENATAL_UUID);
 		if (programWorkflow == null) {
+			return;
+		}
+		
+		Concept prenatalStatusValue = Utils.findLatestCodedObsValue(encounter, pregnancyStatusConcept);
+		if (prenatalStatusValue == null) {
 			return;
 		}
 		
