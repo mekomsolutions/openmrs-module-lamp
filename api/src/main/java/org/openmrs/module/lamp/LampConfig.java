@@ -33,4 +33,8 @@ public class LampConfig {
 	public static final String PROGRAM_PRENATAL_UUID = "3531501f-bbdf-4e49-be19-6c87220f71ee";
 	
 	public static final String WORKFLOW_PRENATAL_UUID = "3009b582-1745-46bc-8886-7ea20f4675f2";
+	
+	public static final String CONCEPT_18_WEEKS_IN_CHILD_NUTRITION_PROGRAM = "74f45a8a-4128-4eb6-b8ca-f4b641c6de3a";
+	
+	public static final String CONCEPT_10_MONTHS_IN_PRENATAL_PROGRAM = "20cfecf2-d01f-4bd8-b71e-ad112ce0d7ce";
 }

@@ -26,6 +26,15 @@
 		<module>omod</module>
 	</modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.openmrs.api</groupId>
+            <artifactId>openmrs-api</artifactId>
+            <version>${openmrsPlatformVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
 	<repositories>
 		<repository>
 			<id>openmrs-repo</id>
