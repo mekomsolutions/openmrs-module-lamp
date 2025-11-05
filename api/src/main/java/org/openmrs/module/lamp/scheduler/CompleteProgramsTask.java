@@ -25,7 +25,7 @@ public class CompleteProgramsTask extends AbstractTask {
 	
 	@Override
 	public void execute() {
-		log.info("Executing CompletePrograms Task");
+		log.debug("Executing CompletePrograms Task");
 		try {
 			ProgramWorkflowService programWorkflowService = Context.getProgramWorkflowService();
 			
@@ -90,9 +90,7 @@ public class CompleteProgramsTask extends AbstractTask {
 						        programWorkflow,
 						        Context.getConceptService().getConceptByUuid(
 						            LampConfig.CONCEPT_18_WEEKS_IN_CHILD_NUTRITION_PROGRAM)), new Date());
-						log.info("Auto-completed Child Nutrition program '" + program.getName() + "' for patient "
-						        + (pp.getPatient() != null ? pp.getPatient().getId() : "unknown") + " (enrolled: "
-						        + enrolled + ")");
+						log.info("Auto-completed Child Nutrition program");
 					}
 					
 					if (pp.getProgram().getUuid().equals(PROGRAM_PRENATAL_UUID)) {
@@ -107,9 +105,7 @@ public class CompleteProgramsTask extends AbstractTask {
 						        programWorkflow,
 						        Context.getConceptService().getConceptByUuid(
 						            LampConfig.CONCEPT_10_MONTHS_IN_PRENATAL_PROGRAM)), new Date());
-						log.info("Auto-completed Prenatal program '" + program.getName() + "' for patient "
-						        + (pp.getPatient() != null ? pp.getPatient().getId() : "unknown") + " (enrolled: "
-						        + enrolled + ")");
+						log.info("Auto-completed Prenatal program");
 					}
 					
 				}

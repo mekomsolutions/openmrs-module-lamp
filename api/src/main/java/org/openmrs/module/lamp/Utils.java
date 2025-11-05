@@ -63,7 +63,7 @@ public class Utils {
 	
 	public static ProgramWorkflowState getStateByConcept(ProgramWorkflow programWorkflow, Concept concept) {
 		for (ProgramWorkflowState programWorkflowState : programWorkflow.getStates()) {
-			if (concept.equals(programWorkflowState.getConcept())) {
+			if (concept.getUuid().equals(programWorkflowState.getConcept().getUuid())) {
 				return programWorkflowState;
 			}
 		}
