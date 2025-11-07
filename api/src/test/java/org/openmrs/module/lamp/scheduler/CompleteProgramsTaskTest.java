@@ -94,7 +94,7 @@ public class CompleteProgramsTaskTest {
 	}
 	
 	@Test
-	public void execute_shouldCompletePrenatalProgramsOlderThan44Weeks() {
+	public void shouldCompletePrenatalProgramsOlderThan44Weeks() {
 		Program prenatalProgram = new Program();
 		prenatalProgram.setUuid(LampConfig.PROGRAM_PRENATAL_UUID);
 		prenatalProgram.setName("Prenatal");
