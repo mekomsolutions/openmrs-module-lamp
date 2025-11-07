@@ -25,6 +25,7 @@ import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.lamp.LampConfig;
 import org.openmrs.module.lamp.Utils;
+import org.openmrs.scheduler.tasks.AbstractTask;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -84,7 +85,8 @@ public class CompleteProgramsTaskTest {
 		    mockWorkflow);
 		PowerMockito.when(Utils.getStateByConcept(mockWorkflow, mockConcept)).thenReturn(mockState);
 		
-		new CompleteProgramsTask().execute();
+		AbstractTask task = new CompleteProgramsTask();
+		task.execute();
 		
 		assertNotNull(eligible.getDateCompleted());
 		verify(eligible, times(1)).transitionToState(eq(mockState), any(Date.class));
@@ -105,24 +107,33 @@ public class CompleteProgramsTaskTest {
 		when(mockProgramWorkflowService.getPatientPrograms(null, childProgram, null, null, null, null, false)).thenReturn(
 		    new ArrayList<PatientProgram>());
 		
-		PatientProgram prenatalEligible = spy(new PatientProgram());
-		prenatalEligible.setProgram(prenatalProgram);
-		prenatalEligible.setDateEnrolled(weeksAgo(60));
+		PatientProgram eligible = spy(new PatientProgram());
+		eligible.setProgram(prenatalProgram);
+		eligible.setDateEnrolled(weeksAgo(60));
+		
+		PatientProgram ineligible = spy(new PatientProgram());
+		ineligible.setProgram(prenatalProgram);
+		ineligible.setDateEnrolled(weeksAgo(5));
+		
+		List<PatientProgram> prenatalPrograms = new ArrayList<PatientProgram>(Arrays.asList(eligible, ineligible));
 		when(mockProgramWorkflowService.getPatientPrograms(null, prenatalProgram, null, null, null, null, false))
-		        .thenReturn(Arrays.asList(prenatalEligible));
+		        .thenReturn(prenatalPrograms);
 		
 		ProgramWorkflow mockWorkflow = Mockito.mock(ProgramWorkflow.class);
 		ProgramWorkflowState mockState = Mockito.mock(ProgramWorkflowState.class);
+		
 		Concept mockConcept = new Concept();
 		when(mockConceptService.getConceptByUuid(LampConfig.CONCEPT_10_MONTHS_IN_PRENATAL_PROGRAM)).thenReturn(mockConcept);
 		PowerMockito.when(Utils.getWorkflowByUuid(prenatalProgram, LampConfig.WORKFLOW_PRENATAL_UUID)).thenReturn(
 		    mockWorkflow);
 		PowerMockito.when(Utils.getStateByConcept(mockWorkflow, mockConcept)).thenReturn(mockState);
 		
-		new CompleteProgramsTask().execute();
+		AbstractTask task = new CompleteProgramsTask();
+		task.execute();
 		
-		assertNotNull(prenatalEligible.getDateCompleted());
-		verify(prenatalEligible, times(1)).transitionToState(eq(mockState), any(Date.class));
+		assertNotNull(eligible.getDateCompleted());
+		verify(eligible, times(1)).transitionToState(eq(mockState), any(Date.class));
+		verify(ineligible, never()).transitionToState(any(ProgramWorkflowState.class), any(Date.class));
 	}
 	
 	@Test
