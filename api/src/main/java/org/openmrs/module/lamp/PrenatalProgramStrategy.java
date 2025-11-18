@@ -4,6 +4,7 @@ import java.util.Date;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.PatientProgram;
+import org.openmrs.PatientState;
 import org.openmrs.Program;
 import org.openmrs.ProgramWorkflow;
 import org.openmrs.ProgramWorkflowState;
@@ -43,6 +44,12 @@ public class PrenatalProgramStrategy implements ProgramStrategy {
 		
 		ProgramWorkflowState targetState = Utils.getStateByConcept(programWorkflow, prenatalStatusValue);
 		if (targetState == null) {
+			return;
+		}
+		
+		PatientState patientState = patientProgram.getCurrentState(programWorkflow);
+		if (patientState != null && patientState.getState() != null
+		        && patientState.getState().getConcept().getUuid().equals(targetState.getConcept().getUuid())) {
 			return;
 		}
 		
