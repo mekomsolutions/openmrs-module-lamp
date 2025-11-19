@@ -88,7 +88,6 @@ public class CompleteProgramsTaskTest {
 		AbstractTask task = new CompleteProgramsTask();
 		task.execute();
 		
-		assertNotNull(eligible.getDateCompleted());
 		verify(eligible, times(1)).transitionToState(eq(mockState), any(Date.class));
 		verify(ineligible, never()).transitionToState(any(ProgramWorkflowState.class), any(Date.class));
 	}
@@ -131,7 +130,6 @@ public class CompleteProgramsTaskTest {
 		AbstractTask task = new CompleteProgramsTask();
 		task.execute();
 		
-		assertNotNull(eligible.getDateCompleted());
 		verify(eligible, times(1)).transitionToState(eq(mockState), any(Date.class));
 		verify(ineligible, never()).transitionToState(any(ProgramWorkflowState.class), any(Date.class));
 	}

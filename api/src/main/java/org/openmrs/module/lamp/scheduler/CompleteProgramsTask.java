@@ -3,8 +3,10 @@ package org.openmrs.module.lamp.scheduler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.PatientProgram;
+import org.openmrs.PatientState;
 import org.openmrs.Program;
 import org.openmrs.ProgramWorkflow;
+import org.openmrs.ProgramWorkflowState;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.lamp.LampConfig;
@@ -83,9 +85,18 @@ public class CompleteProgramsTask extends AbstractTask {
 			return;
 		}
 		
-		pp.setDateCompleted(new Date());
-		pp.transitionToState(Utils.getStateByConcept(workflow, Context.getConceptService().getConceptByUuid(conceptUuid)),
-		    new Date());
+		ProgramWorkflowState programWorkflowState = Utils.getStateByConcept(workflow, Context.getConceptService()
+		        .getConceptByUuid(conceptUuid));
+		if (programWorkflowState == null) {
+			return;
+		}
+		for (PatientState ps : pp.getStates()) {
+			if (ps.getActive() && ps.getState().getProgramWorkflow().equals(programWorkflowState.getProgramWorkflow())) {
+				ps.setEndDate(new Date());
+			}
+		}
+		
+		pp.transitionToState(programWorkflowState, new Date());
 		
 		log.info("Auto-completed " + programName + " program");
 	}

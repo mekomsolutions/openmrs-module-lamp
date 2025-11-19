@@ -82,7 +82,7 @@ public class ChildNutritionProgramStrategy implements ProgramStrategy {
 			return;
 		}
 		
-		Utils.updateProgram(patientProgram, encounter, currentDate, targetState);
+		Utils.updateProgram(patientProgram, encounter, targetState);
 		patientProgram.setLocation(encounter.getLocation());
 		programWorkflowService.savePatientProgram(patientProgram);
 	}
