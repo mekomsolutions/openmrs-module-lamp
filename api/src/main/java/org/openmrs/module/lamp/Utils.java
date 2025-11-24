@@ -6,6 +6,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientProgram;
+import org.openmrs.PatientState;
 import org.openmrs.Program;
 import org.openmrs.ProgramWorkflow;
 import org.openmrs.ProgramWorkflowState;
@@ -63,34 +64,20 @@ public class Utils {
 	
 	public static ProgramWorkflowState getStateByConcept(ProgramWorkflow programWorkflow, Concept concept) {
 		for (ProgramWorkflowState programWorkflowState : programWorkflow.getStates()) {
-			if (concept.equals(programWorkflowState.getConcept())) {
+			if (concept.getUuid().equals(programWorkflowState.getConcept().getUuid())) {
 				return programWorkflowState;
 			}
 		}
 		return null;
 	}
 	
-	public static Date getProgramStatusUpdateDate(PatientProgram patientProgram, Encounter encounter, Date currentDate) {
-		Date programStatusUpdateDate;
-		Date enrolled = patientProgram.getDateEnrolled();
-		if (enrolled != null && encounter.getEncounterDatetime() != null
-		        && encounter.getEncounterDatetime().before(enrolled)) {
-			programStatusUpdateDate = enrolled;
-		} else if (encounter.getEncounterDatetime() != null) {
-			programStatusUpdateDate = encounter.getEncounterDatetime();
-		} else {
-			programStatusUpdateDate = currentDate;
+	public static void updateProgram(PatientProgram patientProgram, Encounter encounter, ProgramWorkflowState targetState) {
+		for (PatientState ps : patientProgram.getStates()) {
+			if (ps.getActive() && ps.getState().getProgramWorkflow().equals(targetState.getProgramWorkflow())) {
+				ps.setEndDate(encounter.getEncounterDatetime());
+			}
 		}
-		return programStatusUpdateDate;
-	}
-	
-	public static void updateProgram(PatientProgram patientProgram, Encounter encounter, Date currentDate,
-	        ProgramWorkflowState targetState) {
-		Date programStatusUpdateDate = getProgramStatusUpdateDate(patientProgram, encounter, currentDate);
 		
-		if (targetState.getTerminal()) {
-			patientProgram.setDateCompleted(new Date());
-		}
-		patientProgram.transitionToState(targetState, programStatusUpdateDate);
+		patientProgram.transitionToState(targetState, encounter.getEncounterDatetime());
 	}
 }

@@ -4,6 +4,7 @@ import java.util.Date;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.PatientProgram;
+import org.openmrs.PatientState;
 import org.openmrs.Program;
 import org.openmrs.ProgramWorkflow;
 import org.openmrs.ProgramWorkflowState;
@@ -75,7 +76,13 @@ public class ChildNutritionProgramStrategy implements ProgramStrategy {
 			targetState.setTerminal(false);
 		}
 		
-		Utils.updateProgram(patientProgram, encounter, currentDate, targetState);
+		PatientState patientState = patientProgram.getCurrentState(programWorkflow);
+		if (patientState != null && patientState.getState() != null
+		        && patientState.getState().getConcept().getUuid().equals(targetState.getConcept().getUuid())) {
+			return;
+		}
+		
+		Utils.updateProgram(patientProgram, encounter, targetState);
 		patientProgram.setLocation(encounter.getLocation());
 		programWorkflowService.savePatientProgram(patientProgram);
 	}

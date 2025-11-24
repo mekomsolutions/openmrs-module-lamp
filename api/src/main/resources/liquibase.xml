@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+ 
+    <!--
+    	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
+    	documentation on this file.
+    
+        See http://www.liquibase.org/manual/home#available_database_refactorings
+        for a list of supported elements and attributes
+    -->
+
+    <changeSet id="create-complete-program-task-2025-11-04" author="siddharth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.lamp.scheduler.CompleteProgramsTask'
+                And name = 'Complete LAMP Program Task'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting CompletePrograms Task into 'schedule_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Complete LAMP Program Task" />
+            <column name="description" value="Completes open Programs in Ozone LAMP" />
+            <column name="schedulable_class" value="org.openmrs.module.lamp.scheduler.CompleteProgramsTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="now()" />
+            <column name="repeat_interval" value="60" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1"/>
+            <column name="started" value="0"/>
+            <column name="uuid" value="e8ed7c5d-80f2-4f77-beeb-d12c5f0badc6" />
+        </insert>
+    </changeSet>
+</databaseChangeLog>
+
+
