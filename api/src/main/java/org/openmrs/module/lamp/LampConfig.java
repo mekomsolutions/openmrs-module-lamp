@@ -16,8 +16,6 @@ public class LampConfig {
 	
 	public static final String CHILD_NUTRITION_ENCOUNTER_TYPE_UUID = "a46c50d1-f8f2-4b73-9940-7e77c64bcffc";
 	
-	public static final String CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID = "0a947c3b-ac0a-42af-9299-674620dc7a6d";
-	
 	public static final String CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID = "a7781567-2c1e-4bfd-ad3a-182915722916";
 	
 	public static final String CONCEPT_CHILD_NUTRITION_MALNUTRITION_STATUS_UUID = "0ae3326d-592b-4ce0-a523-6e03bbe99b69";

@@ -1,7 +1,6 @@
 package org.openmrs.module.lamp;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -236,49 +235,7 @@ public class ChildNutritionProgramStrategyTest {
 	}
 	
 	@Test
-	public void shouldNotSetDateCompletedWhenReachedTargetFromMalnutritionStatus() {
-		Encounter encounter = buildEncounter(true);
-		Date now = new Date();
-		Program program = new Program();
-		when(mockProgramWorkflowService.getProgramByUuid(LampConfig.PROGRAM_CHILD_NUTRITION_UUID)).thenReturn(program);
-		
-		Concept malC = new Concept(101);
-		Concept reasonC = new Concept(102);
-		when(mockConceptService.getConceptByUuid(LampConfig.CONCEPT_CHILD_NUTRITION_MALNUTRITION_STATUS_UUID)).thenReturn(
-		    malC);
-		when(mockConceptService.getConceptByUuid(LampConfig.CONCEPT_CHILD_NUTRITION_REASON_FOR_DISCHARGE_UUID)).thenReturn(
-		    reasonC);
-		
-		PatientProgram pp = new PatientProgram();
-		PowerMockito.when(
-		    Utils.getOrCreateActiveProgramEnrollment(eq(mockProgramWorkflowService), eq(encounter.getPatient()),
-		        eq(program), any(Date.class))).thenReturn(pp);
-		
-		Concept malValue = new Concept(201);
-		malValue.setUuid(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID);
-		PowerMockito.when(Utils.findLatestCodedObsValue(encounter, malC)).thenReturn(malValue);
-		PowerMockito.when(Utils.findLatestCodedObsValue(encounter, reasonC)).thenReturn(null);
-		
-		ProgramWorkflow wf = new ProgramWorkflow();
-		PowerMockito.when(Utils.getWorkflowByUuid(program, LampConfig.WORKFLOW_CHILD_NUTRITION_UUID)).thenReturn(wf);
-		
-		ProgramWorkflowState state = new ProgramWorkflowState();
-		state.setConcept(malValue);
-		PowerMockito.when(Utils.getStateByConcept(wf, malValue)).thenReturn(state);
-		
-		childNutritionProgramStrategy.execute(encounter, new User(), now, "reason");
-		
-		// dateCompleted should NOT be set because it came from malnutrition path
-		assertNull(pp.getDateCompleted());
-		assertFalse(state.getTerminal());
-		
-		// transition & save
-		assertEquals(encounter.getLocation(), pp.getLocation());
-		verify(mockProgramWorkflowService, times(1)).savePatientProgram(pp);
-	}
-	
-	@Test
-	public void shouldSetDateCompletedWhenReachedTargetFromReasonForDischarge() {
+	public void shouldSetDateCompletedWhenReachedTargetWeight() {
 		Encounter encounter = buildEncounter(true);
 		Date now = new Date();
 		Program program = new Program();
@@ -300,7 +257,6 @@ public class ChildNutritionProgramStrategyTest {
 		PowerMockito.when(Utils.findLatestCodedObsValue(encounter, malC)).thenReturn(null);
 		
 		Concept reasonValue = new Concept(301);
-		reasonValue.setUuid(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID);
 		PowerMockito.when(Utils.findLatestCodedObsValue(encounter, reasonC)).thenReturn(reasonValue);
 		
 		ProgramWorkflow wf = new ProgramWorkflow();
