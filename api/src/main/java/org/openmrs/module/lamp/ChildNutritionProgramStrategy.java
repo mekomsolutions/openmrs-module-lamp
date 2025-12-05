@@ -50,30 +50,15 @@ public class ChildNutritionProgramStrategy implements ProgramStrategy {
 		}
 		
 		ProgramWorkflowState targetState = null;
-		boolean isReachedTargetGoalWeightStateFromMalnutritionStatusValue = false;
 		
 		if (malnutritionStatusValue != null) {
 			targetState = Utils.getStateByConcept(programWorkflow, malnutritionStatusValue);
-			if (targetState == null) {
-				return;
-			}
-			if (targetState.getConcept().getUuid().equalsIgnoreCase(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID)) {
-				isReachedTargetGoalWeightStateFromMalnutritionStatusValue = true;
-			}
 		}
-		
 		if (reasonForDischargeValue != null) {
 			targetState = Utils.getStateByConcept(programWorkflow, reasonForDischargeValue);
-			if (targetState == null) {
-				return;
-			}
-			if (targetState.getConcept().getUuid().equalsIgnoreCase(LampConfig.CONCEPT_REACHED_TARGET_GOAL_WEIGHT_UUID)) {
-				isReachedTargetGoalWeightStateFromMalnutritionStatusValue = false;
-			}
 		}
-		
-		if (isReachedTargetGoalWeightStateFromMalnutritionStatusValue) {
-			targetState.setTerminal(false);
+		if (targetState == null) {
+			return;
 		}
 		
 		PatientState patientState = patientProgram.getCurrentState(programWorkflow);
