@@ -10,7 +10,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>lamp</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<name>Lamp</name>
 	<description>An all-use OpenMRS module specific to Lamp for Haiti, mostly used for now to manage Child Nutrition and Prenatal programs.</description>
