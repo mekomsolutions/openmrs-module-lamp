@@ -36,6 +36,30 @@
             <column name="uuid" value="e8ed7c5d-80f2-4f77-beeb-d12c5f0badc6" />
         </insert>
     </changeSet>
+
+    <changeSet id="create-close-stale-visits-task-2026-05-20" author="siddharth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.lamp.scheduler.CloseStaleVisitsTask'
+                And name = 'Close Stale LAMP Visits Task'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting CloseStaleVisits Task into 'scheduler_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Close Stale LAMP Visits Task" />
+            <column name="description" value="Closes active LAMP visits that have been inactive for 12 hours" />
+            <column name="schedulable_class" value="org.openmrs.module.lamp.scheduler.CloseStaleVisitsTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="now()" />
+            <column name="repeat_interval" value="3600" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1"/>
+            <column name="started" value="0"/>
+            <column name="uuid" value="b8d1d3f4-2d23-4a4a-9c3a-5e94e4d1c2a1" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>
 
 
