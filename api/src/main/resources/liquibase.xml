@@ -18,7 +18,7 @@
             <sqlCheck expectedResult="0">
                 SELECT COUNT(*) FROM scheduler_task_config
                 WHERE schedulable_class = 'org.openmrs.module.lamp.scheduler.CompleteProgramsTask'
-                And name = 'Complete LAMP Program Task'
+                AND name = 'Complete LAMP Program Task'
             </sqlCheck>
         </preConditions>
         <comment>Inserting CompletePrograms Task into 'schedule_task_config' table</comment>
@@ -36,6 +36,28 @@
             <column name="uuid" value="e8ed7c5d-80f2-4f77-beeb-d12c5f0badc6" />
         </insert>
     </changeSet>
+
+    <changeSet id="create-close-stale-visits-task-2026-05-20" author="siddharth">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM scheduler_task_config
+                WHERE schedulable_class = 'org.openmrs.module.emrapi.adt.CloseStaleVisitsTask'
+                AND name = 'Close Stale Visits Task'
+            </sqlCheck>
+        </preConditions>
+        <comment>Inserting CloseStaleVisits Task into 'scheduler_task_config' table</comment>
+        <insert tableName="scheduler_task_config">
+            <column name="name" value="Close Stale Visits Task" />
+            <column name="description" value="Closes open inactive Visits in Ozone LAMP" />
+            <column name="schedulable_class" value="org.openmrs.module.emrapi.adt.CloseStaleVisitsTask" />
+            <column name="start_time_pattern" value="MM/dd/yyyy HH:mm:ss" />
+            <column name="start_time" valueDate="now()" />
+            <column name="repeat_interval" value="3600" />
+            <column name="date_created" valueDate="CURRENT_TIMESTAMP" />
+            <column name="created_by" value="1" />
+            <column name="start_on_startup" value="1"/>
+            <column name="started" value="0"/>
+            <column name="uuid" value="d734e442-dffa-42e9-8d25-c02d0a534a5f" />
+        </insert>
+    </changeSet>
 </databaseChangeLog>
-
-
